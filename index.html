@@ -24,8 +24,17 @@
         h3 {font-size: min(3vw,3vh);}
 
         #controls {
-            margin: 10px;
             display: none;
+            align-items: center;
+            justify-content: center;
+            margin: min(2vh,2vw);
+        }
+        #controls div {
+            display: flex;
+            justify-content: center;
+        }
+        #controls p {
+            text-align: center;
         }
         #cooldown { 
             display: none;
@@ -44,7 +53,6 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            margin-top: 10px;
             width: 50%;
             max-width: min(50vw,40vh);
         }
@@ -106,11 +114,11 @@
 
     window.onload = createQuestionnaire;
     </script>
-    
+
     <canvas id="mazeCanvas" width="400" height="400"></canvas>
     <div id="controls">
-        <button onclick="resetGame()">Reset</button>
-        <p id="timer">Time: 0s</p>
+        <div><button onclick="resetGame()">Reset</button></div>
+        <div><p id="timer">Time: 0s</p></div>
     </div>
     
     <div id="mobileControls">
@@ -137,7 +145,7 @@
         const cooltext = document.getElementById('cooltext');
         const controls = document.getElementById('controls');
         let maze, player, timer, timerInterval, mazeCount = 0;
-        const totalMazes = 5;
+        const totalMazes = 2;
         const mazeSize = 27;
         const cellSize = canvas.width / mazeSize;
 
@@ -156,6 +164,9 @@
         }
 
         function logMovement(direction, valid) {
+            if (mazeCount > totalMazes) { 
+                return;
+            }
             let currentRun = playerData.mazeRuns[playerData.mazeRuns.length - 1]; // Get latest maze
             currentRun.movements.push({ 
                 direction, 
@@ -166,17 +177,11 @@
 
         function startMazeSequence() {
             document.getElementById('coolbtn').innerText = "Start next Maze";
-            if (mazeCount < totalMazes) {
-                questionnaire.style.display = 'none';
-                cooldown.style.display = 'none'
-                canvas.style.display = 'block';
-                controls.style.display = 'block';
-                startGame();
-            } else {
-                questionnaire.style.display = 'block';
-                cooldown.style.display = 'none';
-                mazeCount = 0;
-            }
+            questionnaire.style.display = 'none';
+            cooldown.style.display = 'none'
+            canvas.style.display = 'block';
+            controls.style.display = 'block';
+            startGame();
         }
 
         function generateMazeKruskal() {
@@ -244,10 +249,6 @@
         }
 
         function startGame() {
-            if (mazeCount >= totalMazes) {
-                alert("Congratulations! You completed all mazes.");
-                return;
-            }
             generateMazeKruskal();
 
             // Save maze layout for this run
@@ -255,7 +256,9 @@
                 mazeLayout: maze.map(row => [...row]), // Copy maze layout
                 movements: [] // Empty array to store movements
             };
-            playerData.mazeRuns.push(newMaze);
+            if (mazeCount <= totalMazes) {
+                playerData.mazeRuns.push(newMaze);
+            }
             console.log(playerData)
             player = { x: 0, y: 0 };
             timer = 0;
@@ -306,21 +309,24 @@
                 document.getElementById('mobileControls').style.display = 'none';
                 if (mazeCount < totalMazes) {
                     canvas.style.display = 'none';
-                    controls.style.display = 'none';
                     cooldown.style.display = 'block';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
                     if (mazeCount == totalMazes) {sendDataToGoogleSheets()}
                     canvas.style.display = 'none';
-                    controls.style.display = 'none';
                     cooldown.style.display = 'block';
                     cooltext.innerText = `You completed all mazes ${mazeCount}/${totalMazes}!`;
-                    document.getElementById('coolbtn').innerText = "Restart (progress will be lost!)";
+                    document.getElementById('coolbtn').innerText = "Restart";
                 }
             }
         }
 
         function sendDataToGoogleSheets() {
+            document.getElementById('timer').innerText = `Time: ${timer}s\nSending Data...`;
+            function datasentAlarm() {
+                document.getElementById('timer').innerText = 'Data Sent!!';
+                console.log("Data sent");
+            }
             const participantID = Date.now(); // Use a unique identifier
             const questionnaire = {}; 
             document.querySelectorAll("input[type=radio]:checked").forEach(input => {
@@ -337,7 +343,7 @@
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
-            }).then(response => console.log("Data sent"));
+            }).then(response => datasentAlarm());
         }
     </script>
 </body>
