@@ -40,6 +40,31 @@
         #questionnaire {
             text-align: center;
         }
+        #mobileControls {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            width: 50%;
+            max-width: min(50vw,40vh);
+        }
+        #mobileControls > div {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            width: 100%;
+        }
+        #mobileControls button {
+            margin-top: 10px;
+            font-size: min(8dvw,8dvh);
+            align-items: center;
+            height: 100%;
+            width: 30%;
+            max-height: 100%;
+            max-width: 30%;
+            min-width: 25%;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -88,10 +113,20 @@
         <p id="timer">Time: 0s</p>
     </div>
     
+    <div id="mobileControls">
+        <div>
+            <button onclick="movePlayer({ key: 'ArrowUp' })">↑</button>
+        </div>
+        <div>
+            <button onclick="movePlayer({ key: 'ArrowLeft' })">←</button>
+            <button onclick="movePlayer({ key: 'ArrowDown' })">↓</button>
+            <button onclick="movePlayer({ key: 'ArrowRight' })">→</button>
+        </div>
+    </div>
+
     <div id="cooldown">
         <h2 id="cooltext">Get ready for your next maze!</h2>
         <button id="coolbtn" onclick="startMazeSequence()">Start next Maze</button>
-        <button id="savebtn" onclick="sendDataToGoogleSheets()">Send the Data!</button>
     </div>
 
     <script>
@@ -229,8 +264,9 @@
                 timer++;
                 document.getElementById('timer').innerText = `Time: ${timer}s`;
             }, 1000);
-            drawMaze();
+            document.getElementById('mobileControls').style.display = 'flex';
             document.addEventListener('keydown', movePlayer);
+            drawMaze();
         }
 
         function resetGame() {
@@ -267,14 +303,14 @@
                 mazeCount++;
                 player = { x: 0, y: 0 };
                 timer = 0;
+                document.getElementById('mobileControls').style.display = 'none';
                 if (mazeCount < totalMazes) {
                     canvas.style.display = 'none';
                     controls.style.display = 'none';
                     cooldown.style.display = 'block';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
-                    sendDataToGoogleSheets()
-                    document.getElementById('savebtn').style.display = 'block';
+                    if (mazeCount == totalMazes) {sendDataToGoogleSheets()}
                     canvas.style.display = 'none';
                     controls.style.display = 'none';
                     cooldown.style.display = 'block';
