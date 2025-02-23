@@ -47,8 +47,10 @@
         #cooldown { 
             display: none;
             text-align: center;
+            justify-content: center;
+            flex-direction: column;
         }
-        #coolbtn {
+        #cooldown button {
             margin-top: 1vh;
         }
         #savebtn {
@@ -59,7 +61,7 @@
             padding: 2%;
         }
       	#Language div{
-						display: flex;
+			display: flex;
           	justify-content: center;
             align-items: center;
             margin-top: 10px;
@@ -245,6 +247,7 @@
         const mazeSize = 27;
         const cellSize = canvas.width / mazeSize;
         let save = true; // option to not send the data to the server
+        const participantID = Date.now();
 
         let playerData = {
             questionnaire: {},
@@ -371,6 +374,8 @@
             console.log(playerData)
             player = { x: 0, y: 0 };
             timer = 0;
+            if (save) {
+                logMovement('start',true);}
             document.getElementById('timer').innerText = 'Time: 0s';
             document.getElementById('resetbtn').style.display = 'block';
             timerInterval = setInterval(() => {
@@ -426,21 +431,25 @@
 
         function checkWin() {
             if (player.x === mazeSize - 1 && player.y === mazeSize - 1) {
+                
                 clearInterval(timerInterval);
                 mazeCount++;
                 player = { x: 0, y: 0 };
                 timer = 0;
                 document.getElementById('mobileControls').style.display = 'none';
                 document.getElementById('resetbtn').style.display = 'none';
+
+                if (save) {logMovement('win',true);}
+
                 if (mazeCount < totalMazes) {
                     canvas.style.display = 'none';
-                    cooldown.style.display = 'block';
+                    cooldown.style.display = 'flex';
                     document.getElementById('playmore').style.display = 'none';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
                     if (save) {sendDataToGoogleSheets()}
                     canvas.style.display = 'none';
-                    cooldown.style.display = 'block';
+                    cooldown.style.display = 'flex';
                     document.getElementById('playmore').style.display = 'block';
                     cooltext.innerText = `You completed all mazes ${mazeCount}/${totalMazes}!`;
                     document.getElementById('coolbtn').innerText = "Restart";
@@ -454,15 +463,15 @@
                 document.getElementById('timer').innerText = 'Data Sent!';
                 console.log("Data sent");
             }
-            const participantID = Date.now(); // Use a unique identifier
-            const questionnaire = {}; 
+            
+            /* const questionnaire = {}; 
             document.querySelectorAll("input[type=radio]:checked").forEach(input => {
                 questionnaire[input.name] = input.value;
-            });
+            }); */
 
             const data = {
                 participantID: participantID, // Unique identifier for each user
-                questionnaire: playerData.questionnair4e,
+                questionnaire: playerData.questionnaire,
                 mazes: playerData.mazeRuns};
 
             fetch("https://script.google.com/macros/s/AKfycbwIxrS8YgjMhbBAmAhF_em150Gk2M40D6Pi3p03TvGRQWCNG0AAotCYgfpjTLP6Rrxu/exec", {
