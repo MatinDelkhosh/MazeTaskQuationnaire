@@ -19,6 +19,14 @@
             max-height: 60vh;
         }
 
+        #gamePage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: rgb(90, 90, 90);
+        }
+
         h1 {font-size: min(6vw,8vh);}
         h2 {font-size: min(4vw,4vh);}
         h3 {font-size: min(3vw,3vh);}
@@ -46,8 +54,24 @@
         #savebtn {
             display: none;
         }
+      	#Language {
+          	background-color: rgba(255, 255, 255, 0.1);
+            padding: 2%;
+        }
+      	#Language div{
+						display: flex;
+          	justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
         #questionnaire {
             text-align: center;
+            display: none;
+        }
+        #questionsContainer div {
+            padding: 1%;
+            background-color: rgba(255, 255, 255, 0.1);
+            font-size: min(4vw,3vh);
         }
         #mobileControls {
             display: none;
@@ -77,49 +101,120 @@
 </head>
 <body>
     <h1>Maze Puzzle Game</h1>
+  
+  	<div id="Language">
+          
+    		<h3>Choose Your Questionnaire Language:</h3>
+        <div><input type="radio" name="Lang" checked="true" Value="Fa">Persian</input>
+      	<input type="radio" name="Lang" Value="En">English</input></div>
+        <div><button onclick="createQuestionnaire()">Start the Questionnaire!</button></div><br>
+  
+  			<h3>if u just want to play the maze use this button 
+            <button onclick="startMazeSequenceNoSave()">Play!</button>
+        </h3>
+  
+    </div>
+    <br>
     
     <div id="questionnaire">
-        <h2>Before you start, answer these questions:</h2>
+      
+        <h2 id="questionnaireText">Before you start, answer these questions:</h2>
+        
         <div id="questionsContainer" style="display:none;"></div><br><br>
         <button margin-top=20dvh onclick="collectQuestionnaireData()">Submit & Start</button>
     </div>
 
     <script>
-        const questions = [
-            "How much do you enjoy solving puzzles?",
-            "How would you rate your problem-solving skills?",
-            "How often do you play video games?",
-            "How comfortable are you with using technology?",
-            "How much time do you usually spend on games?"
+        const FaQuestions = [ 
+            "فکرهای شبیه به هم مدام، دوباره و دوباره به ذهنم می آیند",
+            "این فکرها به ذهنم هجوم می آورند",
+            "انگار این فکر ها در ذهنم جا خوش کرده اند و من نمی توانم آنها را متوقف کنم",
+            "من به خیلی از مشکالت فکر میکنم، بدون اینکه هیچ یک از آنها را حل کنم",
+            "در حالی که دارم به مشکالتم فکر میکنم، نمی توانم هیچ کار دیگری انجام دهم",
+            "افکارم خود به خود تکرار می شوند",
+            "افکار بدون اینکه خودم بخواهم، به ذهنم می آیند",
+            "ذهن من روی موضوع های مشخصی می ماند بطوری که نمی توانم از آن خالص شوم",
+            "دائماً سؤالاتی از خودم میپرسم بدون اینکه برای آنها جوابی بیابم",
+            "افکارم مانع تمرکزم روزی مسائل دیگری می شوند",
+            "فکرم مدام مشغول یک موضوع تکراری است",
+            "افکار، ناگهانی به ذهنم خطور می کنند",
+            "احساس می کنم که انگار مجبورم در مورد یک مسئله تکراری فکر کنم",
+            "این دسته از افکارم کمک چندانی به من نمی کنند",
+            "افکارم تمام توجه ام را به خود مشغول کرده اند"
         ];
+
+        const EnQuestions = [
+            "The same thoughts keep going through my mind again and again",
+            "Thoughts intrude into my mind",
+            "I can't stop dwelling on them",
+            "I think about many problems without solving any of them",
+            "I can't do anything else while thinking about my problems",
+            "My thoughts repeat themselves",
+            "Thoughts come to my mind without my wanting them to",
+            "I get stuck on certain issues and can't move on",
+            "I constantly ask myself questions without finding any answers",
+            "My thoughts prevent me from focusing on other things",
+            "I keep thinking about the same issue all the time",
+            "Thoughts just pop into my mind",
+            "I feel driven to continue dwelling on the same issue",
+            "My thoughts are not much help to me",
+            "My thoughts take up all my attention"
+        ]
+        
+        let Questions;        
         
         function createQuestionnaire() {
-        const container = document.getElementById('questionsContainer');
-        questions.forEach((question, index) => {
-            const questionDiv = document.createElement('div'); // Changed questionHtml to questionDiv and createElement
-            questionDiv.innerHTML =
-                "<br><h3>" + question + "</h3>" +
-                [0, 1, 2, 3, 4, 5].map(option =>
-                    "<label>" +
-                    "<input type='radio' name='question" + index + "' value='" + option + "'> " + option +
-                    "</label>"
-                ).join('');
 
-            container.appendChild(questionDiv); // Use appendChild to add the created div
-        });
+            if (document.querySelector(`input[name="Lang"]:checked`).value == "Fa") {
+                Questions = FaQuestions;
+                document.getElementById('questionnaireText').innerHTML =
+                    "هرگز-0    به ندرت-1    گاهی-2    بیشتر-3     همیشه-4";
+                ;
+            } else {
+                Questions = EnQuestions;
+                document.getElementById('questionnaireText').innerHTML =
+                    "0-never 1-hardly ever 2-often 3-usually 4-always";
+                ;
+            }
+            
+            document.getElementById('questionnaire').style.display = 'block';
+            document.getElementById('Language').style.display = 'none';
+            document.getElementById('mazeCanvas').style.display = 'none';
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('mobileControls').style.display = 'none';
+            document.getElementById('cooldown').style.display = 'none';
+            playerData.mazeRuns.pop()
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = ""
+            Questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.innerHTML =
+                    "<div><h3>" + question + "</h3></div><div>" +
+                    [0, 1, 2, 3, 4].map(option =>
+                        "<label>" +
+                        "<input type='radio' name='question" + index + "' value='" + option + "'> " + option +
+                        "</label>"
+                    ).join('') + "</div>";
+
+                container.appendChild(questionDiv); // Use appendChild to add the created div
+            });
 
         // Optionally, show the questions after creation
         container.style.display = 'block';
     }
-
-    window.onload = createQuestionnaire;
     </script>
+
+    <div id="gamePage">
 
     <canvas id="mazeCanvas" width="400" height="400"></canvas>
     <div id="controls">
-        <div><button onclick="resetGame()">Reset</button></div>
+        <div><button id="resetbtn" onclick="resetGame()">Reset this Maze</button></div>
         <div><p id="timer">Time: 0s</p></div>
     </div>
+    
+    </div>
+
     
     <div id="mobileControls">
         <div>
@@ -145,9 +240,10 @@
         const cooltext = document.getElementById('cooltext');
         const controls = document.getElementById('controls');
         let maze, player, timer, timerInterval, mazeCount = 0;
-        const totalMazes = 2;
+        let totalMazes = 5;
         const mazeSize = 27;
         const cellSize = canvas.width / mazeSize;
+        let save = true; // option to not send the data to the server
 
         let playerData = {
             questionnaire: {},
@@ -156,11 +252,11 @@
 
         function collectQuestionnaireData() {
             // Store questionnaire answers
-            questions.forEach((question, index) => {
+            Questions.forEach((question, index) => {
                 const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
                 playerData.questionnaire[`Q${index + 1}`] = selectedOption ? selectedOption.value : "No answer";
             });
-            startMazeSequence()
+            startMazeSequenceSave()
         }
 
         function logMovement(direction, valid) {
@@ -182,6 +278,18 @@
             canvas.style.display = 'block';
             controls.style.display = 'block';
             startGame();
+        }
+
+        function startMazeSequenceNoSave() {
+            totalMazes = 20;
+            save = false;
+            startMazeSequence()
+        }
+
+        function startMazeSequenceSave() {
+            totalMazes = 5;
+            save = true;
+            startMazeSequence()
         }
 
         function generateMazeKruskal() {
@@ -256,13 +364,14 @@
                 mazeLayout: maze.map(row => [...row]), // Copy maze layout
                 movements: [] // Empty array to store movements
             };
-            if (mazeCount <= totalMazes) {
+            if (mazeCount <= totalMazes && save) {
                 playerData.mazeRuns.push(newMaze);
             }
             console.log(playerData)
             player = { x: 0, y: 0 };
             timer = 0;
             document.getElementById('timer').innerText = 'Time: 0s';
+            document.getElementById('resetbtn').style.display = 'block';
             timerInterval = setInterval(() => {
                 timer++;
                 document.getElementById('timer').innerText = `Time: ${timer}s`;
@@ -273,9 +382,20 @@
         }
 
         function resetGame() {
+            logMovement('reset',true)
+            // playerData.mazeRuns.pop()
             clearInterval(timerInterval);
             document.removeEventListener('keydown', movePlayer);
             startGame();
+        }
+
+        function restartGame() {
+            playerData = {questionnaire: {}, mazeRuns: []};
+            mazeCount = 0;
+            canvas.style.display = 'none';
+            cooldown.style.display = 'none';
+            controls.style.display = 'none';
+            questionnaire.style.display = 'block';
         }
 
         function movePlayer(event) {
@@ -297,7 +417,9 @@
                 checkWin();
             }
 
-            logMovement(direction, validMove);
+            if (save) {
+                logMovement(direction, validMove);
+            }
         }
 
         function checkWin() {
@@ -307,12 +429,13 @@
                 player = { x: 0, y: 0 };
                 timer = 0;
                 document.getElementById('mobileControls').style.display = 'none';
+                document.getElementById('resetbtn').style.display = 'none';
                 if (mazeCount < totalMazes) {
                     canvas.style.display = 'none';
                     cooldown.style.display = 'block';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
-                    if (mazeCount == totalMazes) {sendDataToGoogleSheets()}
+                    if (save) {sendDataToGoogleSheets()}
                     canvas.style.display = 'none';
                     cooldown.style.display = 'block';
                     cooltext.innerText = `You completed all mazes ${mazeCount}/${totalMazes}!`;
@@ -322,9 +445,9 @@
         }
 
         function sendDataToGoogleSheets() {
-            document.getElementById('timer').innerText = `Time: ${timer}s\nSending Data...`;
+            document.getElementById('timer').innerText += `\nSending Data...`;
             function datasentAlarm() {
-                document.getElementById('timer').innerText = 'Data Sent!!';
+                document.getElementById('timer').innerText = 'Data Sent!';
                 console.log("Data sent");
             }
             const participantID = Date.now(); // Use a unique identifier
@@ -335,7 +458,7 @@
 
             const data = {
                 participantID: participantID, // Unique identifier for each user
-                questionnaire: playerData.questionnaire,
+                questionnaire: playerData.questionnair4e,
                 mazes: playerData.mazeRuns};
 
             fetch("https://script.google.com/macros/s/AKfycbwIxrS8YgjMhbBAmAhF_em150Gk2M40D6Pi3p03TvGRQWCNG0AAotCYgfpjTLP6Rrxu/exec", {
