@@ -230,6 +230,7 @@
     <div id="cooldown">
         <h2 id="cooltext">Get ready for your next maze!</h2>
         <button id="coolbtn" onclick="startMazeSequence()">Start next Maze</button>
+        <button id="playmore" display="none" onclick="startMazeSequenceNoSave()">continue playing!</button>
     </div>
 
     <script>
@@ -382,7 +383,8 @@
         }
 
         function resetGame() {
-            logMovement('reset',true)
+            if (save) {
+                logMovement('reset',true);}
             // playerData.mazeRuns.pop()
             clearInterval(timerInterval);
             document.removeEventListener('keydown', movePlayer);
@@ -433,11 +435,13 @@
                 if (mazeCount < totalMazes) {
                     canvas.style.display = 'none';
                     cooldown.style.display = 'block';
+                    document.getElementById('playmore').style.display = 'none';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
                     if (save) {sendDataToGoogleSheets()}
                     canvas.style.display = 'none';
                     cooldown.style.display = 'block';
+                    document.getElementById('playmore').style.display = 'block';
                     cooltext.innerText = `You completed all mazes ${mazeCount}/${totalMazes}!`;
                     document.getElementById('coolbtn').innerText = "Restart";
                 }
