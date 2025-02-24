@@ -307,10 +307,17 @@
 
         function startMazeSequenceSave() {
             mazeCount = 0;
-            totalMazes = 2;
+            totalMazes = 10;
             save = true;
             startMazeSequence()
         }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            }
 
         function generateMazeKruskal() {
             maze = Array.from({ length: mazeSize }, () => Array(mazeSize).fill(0));
@@ -341,7 +348,7 @@
                     if (y + 2 < mazeSize) walls.push({ x1: x, y1: y, x2: x, y2: y + 2 });
                 }
             }
-            walls.sort(() => Math.random() - 0.5);
+            shuffle(walls);
 
             for (const wall of walls) {
                 const { x1, y1, x2, y2 } = wall;
