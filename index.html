@@ -59,12 +59,17 @@
       	#Language {
           	background-color: rgba(255, 255, 255, 0.1);
             padding: 2%;
+            display: flex;
+            flex-direction: column;
         }
       	#Language div{
 			display: flex;
           	justify-content: center;
             align-items: center;
             margin-top: 10px;
+        }
+        #startbtn{
+            font-size: min(5vw,3vh);
         }
         #questionnaire {
             text-align: center;
@@ -79,8 +84,10 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            width: 50%;
-            max-width: min(50vw,40vh);
+            width: 70%;
+            height: 80vh;
+            max-width: min(70vw,40vh);
+            max-height: min(80vw,80vh);
         }
         #mobileControls > div {
             display: flex;
@@ -108,12 +115,12 @@
           
     		<h3>Choose Your Questionnaire Language:</h3>
         <div><input type="radio" name="Lang" checked="true" Value="Fa">Persian</input>
-      	<input type="radio" name="Lang" Value="En">English</input></div>
-        <div><button onclick="createQuestionnaire()">Start the Questionnaire!</button></div><br>
+      	<input type="radio" name="Lang" Value="En">English</input></div><br>
+        <div><button onclick="createQuestionnaire()" id="startbtn">Start</button></div><br>
   
-  			<h3>if u just want to play the maze use this button 
-            <button onclick="startMazeSequenceNoSave()">Play!</button>
-        </h3>
+  		<h3>if u just want to play the maze use this button</h3>
+        <div><button onclick="startMazeSequenceNoSave()">play!</button></div>
+        
   
     </div>
     <br>
