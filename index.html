@@ -24,7 +24,6 @@
 
         #gamePage {
             display: flex;
-            flex-direction: column;
             align-items: center;
             font-family: Calibri, 'Times New Roman', Arial, sans-serif;
             background-color: rgb(90, 90, 90);
@@ -116,11 +115,12 @@
             min-width: 25%;
             justify-content: center;
         }
-        /* Optional: Adjust panels on small devices
+        
         @media (max-width: 768px) {
-        #Language, #questionnaire, #cooldown {
-            margin-bottom: 15px;
-        } */
+        #gamePage {
+            flex-direction: column;
+        }
+    }
 
     </style>
 </head>
@@ -246,20 +246,17 @@
 
     <div id="gamePage">
 
-    <canvas id="mazeCanvas" width="400" height="400"></canvas>
+    <div><canvas id="mazeCanvas" width="400" height="400"></canvas>
     <div id="controls">
         <div><button id="resetbtn" class="btn btn-warning" onclick="resetGame()">Reset this Maze</button></div>
         <div><p id="timer" style="padding:0%;">Time: 0s</p></div>
-    </div>
+    </div></div>
     
     <div id="cooldown" class="card-body">
         <p class="panel-title" id="cooltext">Get ready for your next maze!</p>
         <button id="coolbtn" class="btn btn-info" onclick="startMazeSequence()">Start next Maze</button>
         <button id="playmore" class="btn btn-info" display="none" onclick="startMazeSequenceNoSave()">continue playing just for fun</button>
     </div>
-    
-    </div>
-
     
     <div id="mobileControls" class="btn-group-vertical">
         <div class="btn-group" role="group">
@@ -270,6 +267,8 @@
             <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowDown' })">↓</button>
             <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowRight' })">→</button>
         </div>
+    </div>
+
     </div>
 
     <script>
