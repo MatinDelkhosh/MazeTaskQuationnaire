@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maze Puzzle Game</title>
+    <title class="text-center">Maze Puzzle Game</title>
+    <!-- Bootstrap 3.3.7 CSS for older device compatibility -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
     <style>
         body {
             display: flex;
@@ -36,6 +39,7 @@
             align-items: center;
             justify-content: center;
             margin: min(2vh,2vw);
+            padding-top: 2%;
         }
         #controls div {
             display: flex;
@@ -53,9 +57,6 @@
         #cooldown button {
             margin-top: 1vh;
         }
-        #savebtn {
-            display: none;
-        }
       	#Language {
           	background-color: rgba(255, 255, 255, 0.1);
             padding: 2%;
@@ -67,6 +68,9 @@
           	justify-content: center;
             align-items: center;
             margin-top: 10px;
+        }
+        #Language .radio-inline {
+            font-size: 1.2em;
         }
         #startbtn{
             font-size: min(5vw,3vh);
@@ -86,12 +90,11 @@
             align-items: center;
             width: 70%;
             height: 40vh;
-            max-width: min(70vw,40vh);
+            max-width: min(90vw,40vh);
             max-height: min(50vw,40vh);
         }   
         #mobileControls > div {
             display: flex;
-            gap: 10px;
             justify-content: center;
             width: 100%;
         }
@@ -106,31 +109,51 @@
             min-width: 25%;
             justify-content: center;
         }
+        /* Optional: Adjust panels on small devices
+        @media (max-width: 768px) {
+        #Language, #questionnaire, #cooldown {
+            margin-bottom: 15px;
+        } */
+
     </style>
 </head>
 <body>
     <h1>Maze Puzzle Game</h1>
+  	<div id="Language" class="panel panel-default">
+
+        <br>
+    	<h3 class="panel-title">Choose Your Questionnaire Language:</h3>
+
+        <div><div style="padding-right: 2%;">
+            <label class="radio-inline">
+                <input type="radio" name="Lang" value="Fa" checked> Persian
+            </label>
+        </div>
+        <div style="padding-left: 2%;">
+      	    <label class="radio-inline">
+                <input type="radio" name="Lang" value="En"> English
+            </label>
+        </div></div>
+
+        <div><button class="btn btn-primary btn-lg" onclick="createQuestionnaire()" id="startbtn">
+            Start
+        </button></div>
+        
+        <hr>
   
-  	<div id="Language">
-          
-    		<h3>Choose Your Questionnaire Language:</h3>
-        <div><input type="radio" name="Lang" checked="true" Value="Fa">Persian</input>
-      	<input type="radio" name="Lang" Value="En">English</input></div><br>
-        <div><button onclick="createQuestionnaire()" id="startbtn">Start</button></div><br>
-  
-  		<h3>if you just want to play the maze use this button</h3>
-        <div><button onclick="startMazeSequenceNoSave()">play for fun!</button></div>
+  		<div><h3>if you just want to just play the maze use this button:</h3></div>
+        <div><button class="btn btn-info" onclick="startMazeSequenceNoSave()">
+            play for fun!
+        </button></div>
         
   
     </div>
-    <br>
     
     <div id="questionnaire">
       
-        <h2 id="questionnaireText">Before you start, answer these questions:</h2>
-        
-        <div id="questionsContainer" style="display:none;"></div><br><br>
-        <button margin-top=20dvh onclick="collectQuestionnaireData()">Submit & Start</button>
+        <h2 id="questionnaireText">Before you start, please answer these questions:<br><br></h2>
+        <div id="questionsContainer" style="display:none;"></div><br>
+        <button margin-top=20dvh class="btn btn-primary" onclick="collectQuestionnaireData()">Submit & Start</button>
     </div>
 
     <script>
@@ -176,12 +199,12 @@
 
             if (document.querySelector(`input[name="Lang"]:checked`).value == "Fa") {
                 Questions = FaQuestions;
-                document.getElementById('questionnaireText').innerHTML =
+                document.getElementById('questionnaireText').innerHTML +=
                     "هرگز-0    به ندرت-1    گاهی-2    بیشتر-3     همیشه-4";
                 ;
             } else {
                 Questions = EnQuestions;
-                document.getElementById('questionnaireText').innerHTML =
+                document.getElementById('questionnaireText').innerHTML +=
                     "0-never 1-hardly ever 2-often 3-usually 4-always";
                 ;
             }
@@ -199,11 +222,12 @@
             Questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.innerHTML =
-                    "<div><h3>" + question + "</h3></div><div>" +
+                    "<div><h3>" + question + "</h3></div><div style='display:flex;justify-content: center;'>" +
                     [0, 1, 2, 3, 4].map(option =>
-                        "<label>" +
-                        "<input type='radio' name='question" + index + "' value='" + option + "'> " + option +
-                        "</label>"
+                        "<div style='background-color:rgba(255, 255, 255, 0);padding-left:5%;padding-right:5%;'>" +
+                        "<input type='radio' name='question" + index + "' value='" + option + "'><br>" +
+                        "<label>" + option + "</label>" +
+                        "<br></div>"
                     ).join('') + "</div>";
 
                 container.appendChild(questionDiv);
@@ -217,28 +241,28 @@
 
     <canvas id="mazeCanvas" width="400" height="400"></canvas>
     <div id="controls">
-        <div><button id="resetbtn" onclick="resetGame()">Reset this Maze</button></div>
-        <div><p id="timer">Time: 0s</p></div>
+        <div><button id="resetbtn" class="btn btn-warning" onclick="resetGame()">Reset this Maze</button></div>
+        <div><p id="timer" style="padding:0%;">Time: 0s</p></div>
+    </div>
+    
+    <div id="cooldown" class="card-body">
+        <p class="panel-title" id="cooltext">Get ready for your next maze!</p>
+        <button id="coolbtn" class="btn btn-info" onclick="startMazeSequence()">Start next Maze</button>
+        <button id="playmore" class="btn btn-info" display="none" onclick="startMazeSequenceNoSave()">continue playing just for fun</button>
     </div>
     
     </div>
 
     
-    <div id="mobileControls">
-        <div>
-            <button onclick="movePlayer({ key: 'ArrowUp' })">↑</button>
+    <div id="mobileControls" class="btn-group-vertical">
+        <div class="btn-group" role="group">
+            <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowUp' })">↑</button>
         </div>
-        <div>
-            <button onclick="movePlayer({ key: 'ArrowLeft' })">←</button>
-            <button onclick="movePlayer({ key: 'ArrowDown' })">↓</button>
-            <button onclick="movePlayer({ key: 'ArrowRight' })">→</button>
+        <div class="btn-group" role="group">
+            <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowLeft' })">←</button>
+            <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowDown' })">↓</button>
+            <button class="btn btn-primary" onclick="movePlayer({ key: 'ArrowRight' })">→</button>
         </div>
-    </div>
-
-    <div id="cooldown">
-        <h2 id="cooltext">Get ready for your next maze!</h2>
-        <button id="coolbtn" onclick="startMazeSequence()">Start next Maze</button>
-        <button id="playmore" display="none" onclick="startMazeSequenceNoSave()">continue playing just for fun</button>
     </div>
 
     <script>
@@ -254,6 +278,7 @@
         const cellSize = canvas.width / mazeSize;
         let save = true; // option to not send the data to the server
         const participantID = Date.now();
+        let meanTime = 0;
 
         let playerData = {
             questionnaire: {},
@@ -457,10 +482,13 @@
 
                 clearInterval(timerInterval);
                 mazeCount++;
+                meanTime = (meanTime + timer) / mazeCount;
                 player = { x: 0, y: 0 };
                 timer = 0;
                 document.getElementById('mobileControls').style.display = 'none';
                 document.getElementById('resetbtn').style.display = 'none';
+                cooltext.innerHTML = `You completed maze ${mazeCount}/${totalMazes}!` + " <br> " +
+                     `Average maze solving time: ${meanTime.toFixed(2)}s`;
 
                 if (save) {logMovement('win',true);}
 
@@ -469,13 +497,11 @@
                     cooldown.style.display = 'flex';
                     document.getElementById('playmore').style.display = 'none';
                     document.getElementById('coolbtn').style.display = 'block';
-                    cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
                     if (save) {sendDataToGoogleSheets();}
                     canvas.style.display = 'none';
                     cooldown.style.display = 'flex';
                     document.getElementById('playmore').style.display = 'block';
-                    cooltext.innerText = `You completed all mazes ${mazeCount}/${totalMazes}!`;
                     document.getElementById('coolbtn').style.display = "none";
                 }
             }
@@ -502,5 +528,6 @@
             }).then(response => datasentAlarm());
         }
     </script>
+<br>
 </body>
 </html>
