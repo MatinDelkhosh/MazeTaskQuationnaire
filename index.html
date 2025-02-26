@@ -85,10 +85,10 @@
             flex-direction: column;
             align-items: center;
             width: 70%;
-            height: 80vh;
+            height: 40vh;
             max-width: min(70vw,40vh);
-            max-height: min(80vw,80vh);
-        }
+            max-height: min(50vw,40vh);
+        }   
         #mobileControls > div {
             display: flex;
             gap: 10px;
@@ -118,8 +118,8 @@
       	<input type="radio" name="Lang" Value="En">English</input></div><br>
         <div><button onclick="createQuestionnaire()" id="startbtn">Start</button></div><br>
   
-  		<h3>if u just want to play the maze use this button</h3>
-        <div><button onclick="startMazeSequenceNoSave()">play!</button></div>
+  		<h3>if you just want to play the maze use this button</h3>
+        <div><button onclick="startMazeSequenceNoSave()">play for fun!</button></div>
         
   
     </div>
@@ -142,7 +142,7 @@
             "در حالی که دارم به مشکالتم فکر میکنم، نمی توانم هیچ کار دیگری انجام دهم",
             "افکارم خود به خود تکرار می شوند",
             "افکار بدون اینکه خودم بخواهم، به ذهنم می آیند",
-            "ذهن من روی موضوع های مشخصی می ماند بطوری که نمی توانم از آن خالص شوم",
+            "ذهن من روی موضوع های مشخصی می ماند بطوری که نمی توانم از آن خلاص شوم",
             "دائماً سؤالاتی از خودم میپرسم بدون اینکه برای آنها جوابی بیابم",
             "افکارم مانع تمرکزم روزی مسائل دیگری می شوند",
             "فکرم مدام مشغول یک موضوع تکراری است",
@@ -468,6 +468,7 @@
                     canvas.style.display = 'none';
                     cooldown.style.display = 'flex';
                     document.getElementById('playmore').style.display = 'none';
+                    document.getElementById('coolbtn').style.display = 'block';
                     cooltext.innerText = `You completed maze ${mazeCount}/${totalMazes}!`;
                 } else {
                     if (save) {sendDataToGoogleSheets();}
@@ -501,9 +502,5 @@
             }).then(response => datasentAlarm());
         }
     </script>
-
-<div id="footer">
-
-</div>
 </body>
 </html>
