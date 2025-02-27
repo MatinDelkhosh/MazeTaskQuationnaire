@@ -90,7 +90,7 @@
         }
         #questionsContainer div {
             padding: 1%;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.2);
             font-size: min(4vw,3vh);
         }
         #mobileControls {
@@ -172,28 +172,29 @@
     
     <div id="questionnaire">
       
-        <h2 id="questionnaireText">Before you start, please answer these questions:<br><br></h2>
+        <h2 id="questionnaireText"></h2>
         <div id="questionsContainer" style="display:none;"></div><br>
+        <h2> Press this button to save the results and continue on to the mazes! </h2> <br>
         <button margin-top=20dvh class="btn btn-primary" onclick="collectQuestionnaireData()">Submit & Start</button>
     </div>
 
     <script>
         const FaQuestions = [ 
-            "فکرهای شبیه به هم مدام، دوباره و دوباره به ذهنم می آیند",
-            "این فکرها به ذهنم هجوم می آورند",
-            "انگار این فکر ها در ذهنم جا خوش کرده اند و من نمی توانم آنها را متوقف کنم",
-            "من به خیلی از مشکالت فکر میکنم، بدون اینکه هیچ یک از آنها را حل کنم",
-            "در حالی که دارم به مشکالتم فکر میکنم، نمی توانم هیچ کار دیگری انجام دهم",
-            "افکارم خود به خود تکرار می شوند",
-            "افکار بدون اینکه خودم بخواهم، به ذهنم می آیند",
-            "ذهن من روی موضوع های مشخصی می ماند بطوری که نمی توانم از آن خلاص شوم",
-            "دائماً سؤالاتی از خودم میپرسم بدون اینکه برای آنها جوابی بیابم",
-            "افکارم مانع تمرکزم روزی مسائل دیگری می شوند",
-            "فکرم مدام مشغول یک موضوع تکراری است",
-            "افکار، ناگهانی به ذهنم خطور می کنند",
-            "احساس می کنم که انگار مجبورم در مورد یک مسئله تکراری فکر کنم",
-            "این دسته از افکارم کمک چندانی به من نمی کنند",
-            "افکارم تمام توجه ام را به خود مشغول کرده اند"
+            "فکرهای شبیه به هم مدام، دوباره و دوباره به ذهنم می آیند.",
+            "این فکرها به ذهنم هجوم می آورند.",
+            "انگار این فکر ها در ذهنم جا خوش کرده اند و من نمی توانم آنها را متوقف کنم.",
+            "من به خیلی از مشکلات فکر میکنم، بدون اینکه هیچ یک از آنها را حل کنم.",
+            "در حالی که دارم به مشکلاتم فکر میکنم، نمی توانم هیچ کار دیگری انجام دهم.",
+            "افکارم خود به خود تکرار می شوند.",
+            "افکار بدون اینکه خودم بخواهم، به ذهنم می آیند.",
+            "ذهن من روی موضوع های مشخصی می ماند بطوری که نمی توانم از آن خلاص شوم.",
+            "دائماً سؤالاتی از خودم میپرسم بدون اینکه برای آنها جوابی بیابم.",
+            "افکارم مانع تمرکزم روزی مسائل دیگری می شوند.",
+            "فکرم مدام مشغول یک موضوع تکراری است.",
+            "افکار، ناگهانی به ذهنم خطور می کنند.",
+            "احساس می کنم که انگار مجبورم در مورد یک مسئله تکراری فکر کنم.",
+            "این دسته از افکارم کمک چندانی به من نمی کنند.",
+            "افکارم تمام توجه ام را به خود مشغول کرده اند."
         ];
 
         const EnQuestions = [
@@ -220,13 +221,20 @@
 
             if (document.querySelector(`input[name="Lang"]:checked`).value == "Fa") {
                 Questions = FaQuestions;
+                document.getElementById('questionnaireText').innerHTML =
+                    "لطفا به سوالات زیر با توجه به شماره گذاری پاسخ دهید. <hr>"
                 document.getElementById('questionnaireText').innerHTML +=
                     "هرگز-0    به ندرت-1    گاهی-2    بیشتر-3     همیشه-4";
+                    document.getElementById('questionnaireText').dir = 'rtl'
+                    d = "dir='rtl'"
                 ;
             } else {
                 Questions = EnQuestions;
+                document.getElementById('questionnaireText').innerHTML =
+                    "Please answer the following questions based on the given indexing.<hr>"
                 document.getElementById('questionnaireText').innerHTML +=
                     "0-never 1-hardly ever 2-often 3-usually 4-always";
+                    d = ""
                 ;
             }
             
@@ -243,7 +251,7 @@
             Questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
                 questionDiv.innerHTML =
-                    "<div><h3>" + question + "</h3></div><div style='display:flex;justify-content: center;'>" +
+                    `<div ${d}><h3>` + `${index+1}- ` + question + "</h3></div><div style='display:flex;justify-content: center;'>" +
                     [0, 1, 2, 3, 4].map(option =>
                         "<div style='background-color:rgba(255, 255, 255, 0);padding-left:5%;padding-right:5%;'>" +
                         "<input type='radio' name='question" + index + "' value='" + option + "'><br>" +
@@ -355,7 +363,7 @@
         function startMazeSequenceSave() {
             mazeCount = 0;
             meanTime = 0;
-            totalMazes = 2;
+            totalMazes = 10;
             save = true;
             startMazeSequence()
         }
