@@ -63,6 +63,9 @@
         #cooldown button {
             margin-top: 1vh;
         }
+        #cooltext {
+            color: rgb(5, 14, 31);
+        }
       	#Language {
           	background-color: rgba(255, 255, 255, 0.1);
             padding: 2%;
@@ -120,7 +123,18 @@
         #gamePage {
             flex-direction: column;
         }
-    }
+        }
+
+        @keyframes warning {
+            0% {background-color: red;}
+            50% {background-color: yellow;}
+            100% {background-color: red;}
+        }
+
+        @keyframes Done {
+            from {background-color: red;}
+            to {background-color: green;}
+        }
 
     </style>
 </head>
@@ -249,11 +263,11 @@
     <div><canvas id="mazeCanvas" width="400" height="400"></canvas>
     <div id="controls">
         <div><button id="resetbtn" class="btn btn-warning" onclick="resetGame()">Reset this Maze</button></div>
-        <div><p id="timer" style="padding:0%;">Time: 0s</p></div>
+        <div id="timerdiv"><p id="timer" style="margin-top:5px;color: rgb(5, 14, 31);">Time: 0s</p></div>
     </div></div>
     
     <div id="cooldown" class="card-body">
-        <p class="panel-title" id="cooltext">Get ready for your next maze!</p>
+        <h2 class="panel-title" id="cooltext">Get ready for your next maze!</h2>
         <button id="coolbtn" class="btn btn-info" onclick="startMazeSequence()">Start next Maze</button>
         <button id="playmore" class="btn btn-info" display="none" onclick="startMazeSequenceNoSave()">continue playing just for fun</button>
     </div>
@@ -321,6 +335,7 @@
 
         function startMazeSequence() {
             document.getElementById('coolbtn').innerText = "Start next Maze";
+            document.getElementById('timerdiv').style = ""
             questionnaire.style.display = 'none';
             cooldown.style.display = 'none'
             canvas.style.display = 'block';
@@ -330,6 +345,7 @@
 
         function startMazeSequenceNoSave() {
             document.getElementById('Language').style.display = 'none';
+            meanTime = 0;
             mazeCount = 0;
             totalMazes = 20;
             save = false;
@@ -338,7 +354,8 @@
 
         function startMazeSequenceSave() {
             mazeCount = 0;
-            totalMazes = 10;
+            meanTime = 0;
+            totalMazes = 2;
             save = true;
             startMazeSequence()
         }
@@ -515,9 +532,17 @@
 
         function sendDataToGoogleSheets() {
             document.getElementById('timer').innerText += `\nSending Data...`;
+            document.getElementById('timerdiv').style = 
+                "animation-name:warning; animation-iteration-count: infinite; animation-duration: 1s;" +
+                "width: 50vw; border-radius: 5px; padding: 2%;";
+            
+
             function datasentAlarm() {
                 document.getElementById('timer').innerText = 'Data Sent!';
                 console.log("Data sent");
+                document.getElementById('timerdiv').style = 
+                    "animation-name:Done; animation-iteration-count: 1;animation-duration: 1s; background-color: green;" +
+                    "width: 50vw; border-radius: 5px; padding: 2%;";
                 cooltext.innerHTML += "<h2>Thank you for your contribuition!</h2>"
             }
 
